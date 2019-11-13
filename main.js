@@ -7,6 +7,7 @@ class Block {
     this.data = data;
     this.previousHash = previousHash;
     this.hash = this.calculateHash();
+    this.nonce = 0;
   }
 
   calculateHash() {
@@ -14,14 +15,26 @@ class Block {
       this.index +
         this.previousHash +
         this.timestamp +
+        this.nonce +
         JSON.stringify(this.data)
     ).toString();
+  }
+
+  mineBlock(difficulty) {
+    while (
+      this.hash.substring(0, difficulty) !== Array(difficulty + 1).join("0")
+    ) {
+      this.nonce++;
+      this.hash = this.calculateHash();
+    }
+    console.log("Blocked mined: ", this.hash);
   }
 }
 
 class Blockchain {
   constructor() {
     this.chain = [this.createGenesisBlock()];
+    this.difficulty = 5;
   }
 
   createGenesisBlock() {
@@ -35,7 +48,7 @@ class Blockchain {
 
   addBlock(newBlock) {
     newBlock.previousHash = this.getLatestBlock().hash;
-    newBlock.hash = newBlock.calculateHash();
+    newBlock.mineBlock(this.difficulty);
     this.chain.push(newBlock);
   }
 
@@ -58,14 +71,19 @@ class Blockchain {
 }
 // un poquito de testing
 let cyanCoin = new Blockchain();
+// cyanCoin.addBlock(new Block(1, "01/11/2019", { amount: 200 }));
+// cyanCoin.addBlock(new Block(2, "03/11/2019", { amount: 500 }));
+
+// console.log("is blockchain valid? ", cyanCoin.isChainValid());
+
+// cyanCoin.chain[1].data = { amount: 100 };
+// cyanCoin.chain[1].hash = cyanCoin.chain[1].calculateHash();
+
+// console.log("is blockchain valid? ", cyanCoin.isChainValid());
+console.log("minando bloque 1: ");
 cyanCoin.addBlock(new Block(1, "01/11/2019", { amount: 200 }));
+
+console.log("minando bloque 2: ");
 cyanCoin.addBlock(new Block(2, "03/11/2019", { amount: 500 }));
-
-console.log("is blockchain valid? ", cyanCoin.isChainValid());
-
-cyanCoin.chain[1].data = { amount: 100 };
-cyanCoin.chain[1].hash = cyanCoin.chain[1].calculateHash();
-
-console.log("is blockchain valid? ", cyanCoin.isChainValid());
 
 // console.log(JSON.stringify(cyanCoin, null, 4));
