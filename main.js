@@ -27,7 +27,7 @@ class Block {
       this.nonce++;
       this.hash = this.calculateHash();
     }
-    console.log("Blocked mined: ", this.hash);
+    console.log("Bloque minado: ", this.hash);
   }
 }
 
@@ -69,21 +69,25 @@ class Blockchain {
     return true;
   }
 }
-// un poquito de testing
+// blockchain testing
+
+// instanciamos nuestra blockchain
 let cyanCoin = new Blockchain();
-// cyanCoin.addBlock(new Block(1, "01/11/2019", { amount: 200 }));
-// cyanCoin.addBlock(new Block(2, "03/11/2019", { amount: 500 }));
 
-// console.log("is blockchain valid? ", cyanCoin.isChainValid());
-
-// cyanCoin.chain[1].data = { amount: 100 };
-// cyanCoin.chain[1].hash = cyanCoin.chain[1].calculateHash();
-
-// console.log("is blockchain valid? ", cyanCoin.isChainValid());
-console.log("minando bloque 1: ");
+console.log("minando bloque 1 ... ");
 cyanCoin.addBlock(new Block(1, "01/11/2019", { amount: 200 }));
 
-console.log("minando bloque 2: ");
+console.log("minando bloque 2 ... ");
 cyanCoin.addBlock(new Block(2, "03/11/2019", { amount: 500 }));
 
+// verificamos que el blockchain sea valido
+console.log("is blockchain valid? ", cyanCoin.isChainValid());
+
+cyanCoin.chain[1].data = { amount: 100 };
+cyanCoin.chain[1].hash = cyanCoin.chain[1].calculateHash();
+
+// vemos nuevamente si el blockchain es valido, luego de haberlo alterado.
+console.log("is blockchain valid? ", cyanCoin.isChainValid());
+
+// vemos el contenido de toda nuestra blockchain
 // console.log(JSON.stringify(cyanCoin, null, 4));
